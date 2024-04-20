@@ -1,6 +1,5 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
-import { persistStore, persistReducer } from "redux-persist";
-import storage from "redux-persist/lib/storage";
+import { contactsApi } from "../services/contacts";
 
 import itemsSlicers from "../allSlicers/itemsSlicers";
 import filterSlicers from "../allSlicers/filterSlicers";
@@ -10,18 +9,11 @@ const contacts = combineReducers({
   filter: filterSlicers.reducer,
 });
 
-const persistConfig = {
-  key: "root",
-  storage,
-  blackList: ["contacts.filter"],
-};
-
-const persistedContacts = persistReducer(persistConfig, contacts);
-
 export const store = configureStore({
   reducer: {
-    contacts: persistedContacts,
+    contacts: contacts,
+    [contactsApi.reducerPath]: contactsApi.reducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(contactsApi.middleware),
 });
-
-export const persistor = persistStore(store);

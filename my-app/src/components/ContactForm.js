@@ -1,27 +1,29 @@
-import { useDispatch, useSelector } from "react-redux";
-import { nanoid } from "nanoid";
-import { addItem } from "../allSlicers/itemsSlicers";
+import {
+  useAddContactMutation,
+  useGetAllContactsQuery,
+} from "../services/contacts";
+import { Circles } from "react-loader-spinner";
 
 const ContactFrom = () => {
-  const items = useSelector((state) => state.contacts.items);
-  const dispatch = useDispatch();
+  const [addContact, { isLoading }] = useAddContactMutation();
+  const { data } = useGetAllContactsQuery();
 
   const onSubmit = (e) => {
     e.preventDefault();
 
-    if (items.some((item) => item.name === e.target.elements.name.value)) {
+    if (data.some((item) => item.name === e.target.elements.name.value)) {
       alert(`${e.target.elements.name.value} is already in your contacts`);
       return;
     }
 
     const newContact = {
       name: e.target.elements.name.value,
-      id: nanoid(),
-      number: e.target.elements.number.value,
+      phone: e.target.elements.number.value,
     };
 
-    // setContacts((p) => [...p, newContact]);
-    dispatch(addItem(newContact));
+    addContact(newContact);
+
+    e.target.reset();
   };
 
   return (
@@ -48,7 +50,7 @@ const ContactFrom = () => {
           required
         />
       </label>
-      <button type="submit">Add contact</button>
+      <button type="submit">{isLoading ? "Deleting..." : "Add Contact"}</button>
     </form>
   );
 };

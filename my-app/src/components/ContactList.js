@@ -1,38 +1,51 @@
-import { useDispatch, useSelector } from "react-redux";
-import { deleteItem } from "../allSlicers/itemsSlicers";
-import { useMemo } from "react";
+import { useSelector } from "react-redux";
+import { Circles } from "react-loader-spinner";
+import {
+  useGetAllContactsQuery,
+  useDeleteContactMutation,
+} from "../services/contacts";
 
 const ContactList = () => {
-  const items = useSelector((state) => state.contacts.items);
   const filter = useSelector((state) => state.contacts.filter);
 
-  const dispatch = useDispatch();
+  const { data, isLoading } = useGetAllContactsQuery();
 
-  const contactsAfterFilter = useMemo(
-    () =>
-      items.filter((el) =>
-        el.name.toLowerCase().includes(filter.toLocaleLowerCase())
-      ),
-    [filter, items]
-  );
+  const [deleteContact, { isLoading: isUpdating }] = useDeleteContactMutation();
+
   return (
     <div>
       <ul>
-        {contactsAfterFilter.map((item) => {
-          return (
-            <li key={item.id}>
-              <p>
-                {item.name}: {item.number}
-                <button
-                  type="button"
-                  onClick={() => dispatch(deleteItem(item.id))}
-                >
-                  delete
-                </button>
-              </p>
-            </li>
-          );
-        })}
+        {isLoading && (
+          <Circles
+            height="30"
+            width="30"
+            color="#4fa94d"
+            ariaLabel="circles-loading"
+            visible={true}
+          />
+        )}
+        {!isLoading &&
+          data
+            .filter((el) =>
+              el.name.toLowerCase().includes(filter.toLowerCase())
+            )
+            .map((item) => {
+              return (
+                <li key={item.id}>
+                  <p>
+                    {item.name}: {item.phone}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        deleteContact(item.id);
+                      }}
+                    >
+                      {isUpdating ? "Deleting..." : "Delete"}
+                    </button>
+                  </p>
+                </li>
+              );
+            })}
       </ul>
     </div>
   );
