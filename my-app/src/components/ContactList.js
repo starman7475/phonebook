@@ -3,7 +3,7 @@ import { Circles } from "react-loader-spinner";
 import {
   useGetAllContactsQuery,
   useDeleteContactMutation,
-} from "../services/contacts";
+} from "../services/contacts-operations";
 
 const ContactList = () => {
   const filter = useSelector((state) => state.contacts.filter);

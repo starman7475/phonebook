@@ -1,18 +1,22 @@
-import ContactFrom from "./components/ContactForm";
-import ContactList from "./components/ContactList";
-import Filter from "./components/Filter";
-
-// import { useDispatch, useSelector } from "react-redux";
+import Contacts from "./components/Contacts";
+import { Routes, Route } from "react-router-dom";
+import Homeview from "./components/Homeview";
+import RegisterForm from "./components/RegisterForm";
+import LoginForm from "./components/LoginForm";
+import Home from "./components/Home";
 
 function App() {
   return (
-    <div>
-      <h1>Pnonebook</h1>
-      <ContactFrom></ContactFrom>
-      <h2>Contacts</h2>
-      <Filter></Filter>
-      <ContactList></ContactList>
-    </div>
+    <>
+      <Routes>
+        <Route element={<Homeview />}>
+          <Route index path="/" element={<Home />} />
+          <Route path="/contacts" element={<Contacts />} />
+          <Route path="/register" element={<RegisterForm />} />
+          <Route path="/login" element={<LoginForm />} />
+        </Route>
+      </Routes>
+    </>
   );
 }
 

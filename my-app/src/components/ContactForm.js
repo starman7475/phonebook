@@ -1,8 +1,7 @@
 import {
   useAddContactMutation,
   useGetAllContactsQuery,
-} from "../services/contacts";
-import { Circles } from "react-loader-spinner";
+} from "../services/contacts-operations";
 
 const ContactFrom = () => {
   const [addContact, { isLoading }] = useAddContactMutation();
